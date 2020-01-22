@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 2020_01_22_043408) do
     t.index ["list_id"], name: "index_list_items_on_list_id"
   end
 
-  create_table "posts", force: :cascade do |t|
+  create_table "lists", force: :cascade do |t|
     t.string "name"
   end
 
