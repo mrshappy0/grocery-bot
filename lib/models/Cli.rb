@@ -6,6 +6,14 @@ class Cli
         @user = user
     end
 
+    def get_item_object_from_choices item_array
+        item_objects = []
+        item_array.each do |item|
+            item_objects << Item.all.find {|each_item| each_item.name == item}
+        end
+        item_objects
+    end
+
     def welcome_menu
         puts "Welcome #{user.name}"
         puts "Would you like to build a new grocery list? \n Please enter Yes or No"
@@ -20,13 +28,10 @@ class Cli
             prompt = TTY::Prompt.new
             
             choices = prompt.multi_select("Please choose from list of popular household-grocery items below: \n", array)
-            choices_array = choices.map {|item| item} 
+            grocery_objects = get_item_object_from_choices (choices)
             
-            # final_choice_object = Item.all.select{|item| item.name == choices_array[0] || item.name == choices_array[1]}
-            
-            # final_choice_object.map {|choice| List_item.create(list: list1, item: choice)}
-            
-            # p choices_array
+            grocery_objects.map {|choice| List_item.create(list: list1, item: choice)}
+
             binding.pry
         end
     end
