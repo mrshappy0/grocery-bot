@@ -18,11 +18,8 @@ class Cli
     # opening prompt that runs list creation. May change that! 
     def welcome_menu
         puts "Welcome #{user.name}"
-        #for new lists
-        list_creation
-        add_items_to_most_current_list
+        choose_list
     end
-
 
     # list creation prompt! Check zach's code for refactoring
     def list_creation
@@ -32,20 +29,15 @@ class Cli
             puts "What is the name of the grocery list?"
             list_name = gets.chomp.downcase
             list1 = List.create(name: list_name)
+            add_items_to_new_list
+            decide_to_RUD(List.last.name)
         elsif answer == "no"
             puts "My work is done here, Thank you!"
             exit
         else
             puts "That is not a valid command"
+            list_creation
         end
-    end
-    
-    def add_items_to_most_current_list
-        array = Item.all.map {|item| item.name}
-        prompt = TTY::Prompt.new
-        choices = prompt.multi_select("Please choose from list of popular household-grocery items below: \n", array)
-        grocery_objects = get_item_object_from_choices (choices)
-        grocery_objects.map {|choice| List_item.create(list: List.all.last, item: choice)}
     end
 
     # Prompt used to decide which list you want to work in.
@@ -59,11 +51,13 @@ class Cli
             list_choice = prompt.select("Please choose which list you would like to access: \n", array) 
             system"clear"
             decide_to_RUD(list_choice)
+        elsif answer == "no"
+            list_creation
         end    
     end
 
 
-    # HELPER: Read, update, delete.'Lots of other *helper* methods used here!
+    # HELPER: Read, update, delete. Used in choose_list 'Lots of other *helper* methods used here!
     def decide_to_RUD current_list
         puts "You working on the list: #{current_list}"
         prompt = TTY::Prompt.new
@@ -74,8 +68,8 @@ class Cli
         if rud_choice == "Read list"
             read_list(current_list)
         elsif rud_choice == "Add item"
-            add_item
-        elsif rud_choice == "Delete_item"
+            add_items_to_new_list
+        elsif rud_choice == "Delete item"
             delete_item
         end
     end
@@ -115,14 +109,6 @@ class Cli
         end
         item_objects
     end
-
-    def add_items_to_most_current_list
-        array = Item.all.map {|item| item.name}
-        prompt = TTY::Prompt.new
-        choices = prompt.multi_select("Please choose from list of popular household-grocery items below: \n", array)
-        grocery_objects = get_item_object_from_choices (choices)
-        grocery_objects.map {|choice| List_item.create(list: List.all.last, item: choice)}
-    end
     
     def get_name_from_item_list (object_array)
         object_array.map {|object| object.name}
@@ -133,15 +119,20 @@ class Cli
     end
 
     
-    # HELPER: for adding(update), Used in decide_to_RUD
-    def add_item
-        puts "adding item"
+    # HELPER: for adding(update), Used in decide_to_RUD, and list_creation
+    def add_items_to_new_list
+        array = Item.all.map {|item| item.name}
+        prompt = TTY::Prompt.new
+        choices = prompt.multi_select("Please choose from list of popular household-grocery items below: \n", array)
+        grocery_objects = get_item_object_from_choices (choices)
+        grocery_objects.map {|choice| List_item.create(list: List.last, item: choice)}
     end
 
 
     # HELPER: for deleting items in a list, used in decide_to_RUD.
-    def delete_item
-        puts "deleting item"
+    def delete_item (list)
+        #array should be made from database that corresponds to the list being passed in.
+        prompt = TTY::Prompt.new
+        choices = prompt.multi_select("Select which item you would like to delete: \n", array)
     end
-
 end
