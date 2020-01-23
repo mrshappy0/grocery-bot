@@ -91,7 +91,6 @@ class Cli
             puts "#{index+1}. #{item}"
         end
     end
-
     
     # HELPER: for read_list
     def find_list_items (id)
