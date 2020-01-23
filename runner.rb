@@ -9,6 +9,7 @@ user_new = User.new(user_name)
 cli = Cli.new(user_new)
 
 cli.welcome_menu
+# cli.welcome_menu
 
 
 #binding.pry

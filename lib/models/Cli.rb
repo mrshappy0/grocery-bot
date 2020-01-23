@@ -21,7 +21,6 @@ class Cli
         choose_list
     end
 
-
     # list creation prompt! Check zach's code for refactoring
     def list_creation
         puts "Would you like to build a new grocery list? \n Please enter Yes or No"
@@ -70,7 +69,7 @@ class Cli
             read_list(current_list)
         elsif rud_choice == "Add item"
             add_items_to_new_list
-        elsif rud_choice == "Delete_item"
+        elsif rud_choice == "Delete item"
             delete_item
         end
     end
@@ -130,10 +129,9 @@ class Cli
 
 
     # HELPER: for deleting items in a list, used in decide_to_RUD.
-    def delete_item(list)
-        #array should be made from database that corresponds to list being passed in.
+    def delete_item (list)
+        #array should be made from database that corresponds to the list being passed in.
         prompt = TTY::Prompt.new
-        choices = prompt.multi_select("Please choose from list of popular household-grocery items below: \n", array)
+        choices = prompt.multi_select("Select which item you would like to delete: \n", array)
     end
-
 end
