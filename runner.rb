@@ -11,5 +11,10 @@ cli = Cli.new(user_new)
 cli.welcome_menu
 
 
+<<<<<<< HEAD
+binding.pry
+0 
+=======
 # binding.pry
 0
+>>>>>>> cfd97976b4f24fbee9342adf83b56a31633db24b

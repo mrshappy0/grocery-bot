@@ -115,6 +115,14 @@ class Cli
         end
         item_objects
     end
+
+    def add_items_to_most_current_list
+        array = Item.all.map {|item| item.name}
+        prompt = TTY::Prompt.new
+        choices = prompt.multi_select("Please choose from list of popular household-grocery items below: \n", array)
+        grocery_objects = get_item_object_from_choices (choices)
+        grocery_objects.map {|choice| List_item.create(list: List.all.last, item: choice)}
+    end
     
     def get_name_from_item_list (object_array)
         object_array.map {|object| object.name}
