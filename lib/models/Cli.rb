@@ -16,7 +16,7 @@ class Cli
 
     def welcome_the_user
         system "clear"
-        puts "\n\nWelcome "+ "#{user.name}!\n\n".colorize(:color=>:light_magenta)
+        puts "\n\n      🍒   🍏  🍗   Welcome "+ "#{user.name}!  🍗   🍏   🍒\n\n".colorize(:color=>:light_magenta)
     end
     # opening prompt that runs list creation. May change that! 
     def welcome_menu(exit_or_not="")
@@ -56,10 +56,10 @@ class Cli
     end
 
     # Prompt used to decide which list you want to work in.
-    def choose_list
+    def choose_list()
         prompt = TTY::Prompt.new 
         array = ["Yes", "No", "Exit"]
-        yes_no = prompt.select("\n\n\nDo you want to acces an" +" existing list?".colorize(:color=>:light_blue), array)
+        yes_no = prompt.select("\n\n\n" + "#{user.name} ".colorize(:color=>:magenta) +"would you want to acces an" +" existing list?\n\n".colorize(:color=>:light_blue), array)
         if yes_no == "Yes"
             system "clear"
             array = List.all.map {|list| list.name}
