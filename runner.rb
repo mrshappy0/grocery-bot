@@ -10,8 +10,9 @@ user_new = User.new(user_name)
 
 cli = Cli.new(user_new)
 
-
+cli.welcome_the_user
 cli.welcome_menu
+
 
 
 0 

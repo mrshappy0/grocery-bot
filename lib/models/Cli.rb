@@ -14,12 +14,14 @@ class Cli
         item_objects
     end
 
-
-    # opening prompt that runs list creation. May change that! 
-    def welcome_menu(exit_or_not="")
+    def welcome_the_user
         system "clear"
         puts "\n\nWelcome "+ "#{user.name}!\n\n".colorize(:color=>:light_magenta)
+    end
+    # opening prompt that runs list creation. May change that! 
+    def welcome_menu(exit_or_not="")
         while exit_or_not != "exit"
+            system "clear"
             exit_or_not = choose_list
         end
     end
@@ -51,19 +53,21 @@ class Cli
     # Prompt used to decide which list you want to work in.
     def choose_list
         prompt = TTY::Prompt.new 
-        array = ["Yes", "No"]
-        yes_no = prompt.select("Do you have an existing list?", array)
+        array = ["Yes", "No", "Exit"]
+        yes_no = prompt.select("\n\n\nDo you have an existing list?", array)
         if yes_no == "Yes"
             system "clear"
             array = List.all.map {|list| list.name}
             list_choice = prompt.select("\n\nPlease choose which list you would like to access: \n", array)
             system"clear"
             decide_to_RUD(list_choice)
-            puts "do you want to exit? Enter exit if you want to"
+            puts "\n\nIf you'd like to continue with grocery bot hit"+" enter-key".colorize(:color=>:red).bold + ". "+"Otherwise enter" +" exit".colorize(:color=>:red).bold
             exit_or_not = gets.chomp.downcase
         elsif yes_no == "No"
             system "clear"
             list_creation
+        else
+            exit 
         end
         exit_or_not    
         # binding.pry
@@ -74,10 +78,10 @@ class Cli
     def decide_to_RUD current_list
         puts "\n\nYou are working within list  "+"------->".colorize(:color=>:light_blue)+" #{current_list}\n\n".colorize(:color => :red).bold
         prompt = TTY::Prompt.new
-        rud_choice = prompt.select("Would you like read, update, or delete within #{current_list}? \n", ["Read list", "Add item", "Delete item"])
+        rud_choice = prompt.select("Would you like read, update, or delete within #{current_list}? \n", ["Read list", "Add item", "Delete item", "Exit"])
         
         system "clear"
-        puts "\n\nYou are working within list  "+"------->".colorize(:color=>:light_blue)+" #{current_list}\n\n".colorize(:color => :red).bold
+        puts "\n\nYou are working within list  "+"------->".colorize(:color=>:light_blue)+" #{current_list}".colorize(:color => :red).bold
         if rud_choice == "Read list"
             read_list(current_list)
         elsif rud_choice == "Add item"
@@ -85,6 +89,8 @@ class Cli
         elsif rud_choice == "Delete item"
 
             delete_item(current_list)
+        else 
+            exit
         end
     end
 
