@@ -104,10 +104,10 @@ class Cli
 
     def read_list(current_list)        
         # Grabbing list id 
-        current_list_id = find_chosen_list_id (current_list)
+        current_list_id = find_chosen_list_id(current_list)
 
         # Grabbing list_items array from the current list id
-        list_item_array = find_list_items (current_list_id)
+        list_item_array = find_list_items(current_list_id)
         thing = get_list_item_id(list_item_array)
         raw_item_list = get_item_object_from_id(thing)
         list_of_names = get_name_from_item_list(raw_item_list)
@@ -132,7 +132,7 @@ class Cli
     
     # HELPER: for read_list
     def find_list_items (id)
-        List_item.all.select{|list_item| list_item.list_id == id}
+        ListItem.all.select{|list_item| list_item.list_id == id}
     end
     
     def get_list_item_id (list_items)
@@ -164,20 +164,22 @@ class Cli
         puts "\n\n      Item's successfully added to list.".colorize(:color=>:light_red)+"😌  😌  😌"
         puts "\n                        🍴  🍛 "
         grocery_objects = get_item_object_from_choices (choices)
-        grocery_objects.map {|choice| List_item.create(list: List.last, item: choice)}
+        grocery_objects.map {|choice| ListItem.create(list: List.last, item: choice)}
     end
 
 
     # HELPER: for deleting items in a list, used in decide_to_RUD.
     def delete_item (list)
         array = read_list(list)
+        binding.pry
         #array should be made from database that corresponds to the list being passed in.
         prompt = TTY::Prompt.new
         choices = prompt.multi_select("Select which item you would like to delete: \n", array)
-        grocery_objects = get_item_object_from_choices (choices)
+        # binding.pry
+        grocery_objects = get_item_object_from_choices(choices)
         list_id = find_chosen_list_id(list)
-        grocery_objects.map {|item| List_item.where(list_id: list_id).where(item_id: item.id)}
-        puts "\n\n          Items successfully deleted! Yehaw".coloriz(:color=>:light_red)
+        grocery_objects.map {|item| ListItem.where(list_id: list_id).where(item_id: item.id)}
+        puts "\n\n          Items successfully deleted! Yehaw".colorize(:color=>:light_red)
     end
 
 

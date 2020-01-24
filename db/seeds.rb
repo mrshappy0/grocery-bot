@@ -1,4 +1,4 @@
-List_item.destroy_all
+ListItem.destroy_all
 Item.destroy_all
 List.destroy_all
 
@@ -25,26 +25,26 @@ ground_beef_buns = Item.create(name: "Ground Beef & Buns")
 salmon_rice = Item.create(name: "Salmon and Rice")
 
 # Create Default List_items and List so choosing from a existing list doesn't cause erros
-List.create(name: "Breakfast List")
-List.create(name: "Lunch List")
-List.create(name: "Dinner List")
-List.create(name: "Party List")
-List.create(name: "Random List")
+list1 = List.create(name: "Breakfast List")
+list2 = List.create(name: "Lunch List")
+list3 = List.create(name: "Dinner List")
+list4 = List.create(name: "Party List")
+list5 = List.create(name: "Random List")
 
 #Populate breakfast, lunch, dinner with items for examples
 
 # Breakfast
-List_item.where(list_id: 1).where(item_id: 2)
-List_item.where(list_id: 1).where(item_id: 3)
-List_item.where(list_id: 1).where(item_id: 4)
-List_item.where(list_id: 1).where(item_id: 5)
+ListItem.create(list: list1, item: oj)
+ListItem.create(list: list1, item: eggs)
+ListItem.create(list: list1, item: bacon)
+ListItem.create(list: list1, item: bread)
 
 # Lunch
-List_item.where(list_id: 2).where(item_id: 6)
-List_item.where(list_id: 2).where(item_id: 8)
-List_item.where(list_id: 2).where(item_id: 9)
+ListItem.create(list: list2, item: sliced_cheddar)
+ListItem.create(list: list2, item: deli_meat)
+ListItem.create(list: list2, item: bread)
 
 # Dinner
-List_item.where(list_id: 3).where(item_id: 11)
-List_item.where(list_id: 3).where(item_id: 13)
-List_item.where(list_id: 3).where(item_id: 14)
+ListItem.create(list: list3, item: mashed_taters)
+ListItem.create(list: list3, item: grilled_chicken)
+ListItem.create(list: list3, item: mixed_veggies)
