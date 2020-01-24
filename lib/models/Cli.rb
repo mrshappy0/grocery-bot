@@ -171,7 +171,7 @@ class Cli
     # HELPER: for deleting items in a list, used in decide_to_RUD.
     def delete_item (list)
         array = read_list(list)
-        binding.pry
+        # binding.pry
         #array should be made from database that corresponds to the list being passed in.
         prompt = TTY::Prompt.new
         choices = prompt.multi_select("Select which item you would like to delete: \n", array)
