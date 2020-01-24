@@ -16,3 +16,5 @@ gem "pry", "~> 0.12.2"
 gem "tty-prompt"
 
 gem "rest-client", "~> 2.1"
+
+gem "colorize", "~> 0.8.1"

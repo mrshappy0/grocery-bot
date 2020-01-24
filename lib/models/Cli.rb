@@ -17,41 +17,44 @@ class Cli
 
     # opening prompt that runs list creation. May change that! 
     def welcome_menu
-        puts "Welcome #{user.name}"
+        system "clear"
+        puts "\n\nWelcome "+ "#{user.name}!\n\n".colorize(:color=>:light_magenta)
         choose_list
     end
 
     # list creation prompt! Check zach's code for refactoring
     def list_creation
-        puts "Would you like to build a new grocery list? \n Please enter Yes or No"
-        answer = gets.chomp.downcase
-        if answer == "yes" 
-            puts "What is the name of the grocery list?"
+        prompt = TTY::Prompt.new
+        array = ["Yes", "No"]
+        yes_no = prompt.select("\n\nWould you like to build a new grocery list?", array)
+        if yes_no == "Yes" 
+            system "clear"
+            puts "\n\nWhat is the name of the grocery list?"
             list_name = gets.chomp.downcase
+            puts "\n\nYou are working within new list  "+"------->".colorize(:color=>:light_blue)+" #{list_name}\n\n".colorize(:color => :red).bold
             list1 = List.create(name: list_name)
             add_items_to_new_list
             decide_to_RUD(List.last.name)
-        elsif answer == "no"
-            puts "My work is done here, Thank you!"
+        elsif yes_no == "No"
+            system "clear"
+            puts "\n\nMy work is done here, Thank you!\n\n\n"
             exit
-        else
-            puts "That is not a valid command"
-            list_creation
         end
     end
 
     # Prompt used to decide which list you want to work in.
-    def choose_list 
-        puts "Do you have an existing list? Please enter Yes or No."
-        answer = gets.chomp.downcase
-        if answer == "yes"
-            puts "Choose which list is yours"
+    def choose_list
+        prompt = TTY::Prompt.new 
+        array = ["Yes", "No"]
+        yes_no = prompt.select("Do you have an existing list?", array)
+        if yes_no == "Yes"
+            system "clear"
             array = List.all.map {|list| list.name}
-            prompt = TTY::Prompt.new
-            list_choice = prompt.select("Please choose which list you would like to access: \n", array) 
+            list_choice = prompt.select("\n\nPlease choose which list you would like to access: \n", array)
             system"clear"
             decide_to_RUD(list_choice)
-        elsif answer == "no"
+        elsif yes_no == "No"
+            system "clear"
             list_creation
         end    
     end
@@ -59,26 +62,23 @@ class Cli
 
     # HELPER: Read, update, delete. Used in choose_list 'Lots of other *helper* methods used here!
     def decide_to_RUD current_list
-        puts "You working on the list: #{current_list}"
+        puts "\n\nYou are working within list  "+"------->".colorize(:color=>:light_blue)+" #{current_list}\n\n".colorize(:color => :red).bold
         prompt = TTY::Prompt.new
         rud_choice = prompt.select("Would you like read, update, or delete within #{current_list}? \n", ["Read list", "Add item", "Delete item"])
         
         system "clear"
-        puts "You working on the list: #{current_list}"
+        puts "\n\nYou are working within list  "+"------->".colorize(:color=>:light_blue)+" #{current_list}\n\n".colorize(:color => :red).bold
         if rud_choice == "Read list"
             read_list(current_list)
         elsif rud_choice == "Add item"
             add_items_to_new_list
         elsif rud_choice == "Delete item"
-            delete_item
+
+            delete_item(current_list)
         end
     end
 
-    
-    # HELPER: for reading a list inside of decide_to_RUD, **takes and string!**
-    def read_list(current_list)
-        puts "List: showing #{current_list}"
-        
+    def read_list(current_list)        
         # Grabbing list id 
         current_list_id = find_chosen_list_id (current_list)
 
@@ -88,8 +88,22 @@ class Cli
         raw_item_list = get_item_object_from_id(thing)
         list_of_names = get_name_from_item_list(raw_item_list)
         list_of_names.each_with_index do |item, index|
-            puts "#{index+1}. #{item}"
+             puts "#{index+1}. #{item}"
         end
+    end
+
+    
+    # HELPER: needs a comment 
+    def read_list_for_delete(current_list)
+        
+        # Grabbing list id 
+        current_list_id = find_chosen_list_id (current_list)
+
+        # Grabbing list_items array from the current list id
+        list_item_array = find_list_items (current_list_id)
+        thing = get_list_item_id(list_item_array)
+        raw_item_list = get_item_object_from_id(thing)
+        list_of_names = get_name_from_item_list(raw_item_list)
     end
     
     # HELPER: for read_list
@@ -123,6 +137,7 @@ class Cli
         array = Item.all.map {|item| item.name}
         prompt = TTY::Prompt.new
         choices = prompt.multi_select("Please choose from list of popular household-grocery items below: \n", array)
+        puts "\n\nItem's successfully added to list.".colorize(:color=>:light_red)
         grocery_objects = get_item_object_from_choices (choices)
         grocery_objects.map {|choice| List_item.create(list: List.last, item: choice)}
     end
@@ -130,8 +145,16 @@ class Cli
 
     # HELPER: for deleting items in a list, used in decide_to_RUD.
     def delete_item (list)
+        array = read_list(list)
         #array should be made from database that corresponds to the list being passed in.
         prompt = TTY::Prompt.new
         choices = prompt.multi_select("Select which item you would like to delete: \n", array)
+        grocery_objects = get_item_object_from_choices (choices)
+        list_id = find_chosen_list_id(list)
+        grocery_objects.map {|item| List_item.where(list_id: list_id).where(item_id: item.id)}
+        puts "Items successfully deleted! Yehaw".coloriz(:color=>:light_red)
     end
+
+
+
 end
