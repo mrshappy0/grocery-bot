@@ -24,6 +24,9 @@ class Cli
             system "clear"
             exit_or_not = choose_list
         end
+        system "clear"
+        puts "\n\n\n\n      🍆  🍉  🍄  🍕  🍤       Exiting Grocery-Bot! PS. Eat your veggies     🍤  🍕  🍄  🍉  🍆\n\n\n".colorize(:color=>:red).bold
+        exit
     end
 
     # list creation prompt! Check zach's code for refactoring
@@ -41,11 +44,13 @@ class Cli
                 add_items_to_new_list
                 decide_to_RUD(List.last.name)
             elsif list_name == "exit"
+                system "clear"
+                puts "\n\n\n\n      🍆  🍉  🍄  🍕  🍤       Exiting Grocery-Bot! PS. Eat your veggies     🍤  🍕  🍄  🍉  🍆\n\n\n".colorize(:color=>:red).bold
                 exit
             end
         elsif yes_no == "No"
             system "clear"
-            puts "\n\nMy work is done here, Thank you!\n\n\n"
+            puts "\n\n\n\n      🍆  🍉  🍄  🍕  🍤       Exiting Grocery-Bot! PS. Eat your veggies     🍤  🍕  🍄  🍉  🍆\n\n\n".colorize(:color=>:red).bold
             exit
         end
     end
@@ -54,11 +59,11 @@ class Cli
     def choose_list
         prompt = TTY::Prompt.new 
         array = ["Yes", "No", "Exit"]
-        yes_no = prompt.select("\n\n\nDo you have an existing list?", array)
+        yes_no = prompt.select("\n\n\nDo you want to acces an" +" existing list?".colorize(:color=>:light_blue), array)
         if yes_no == "Yes"
             system "clear"
             array = List.all.map {|list| list.name}
-            list_choice = prompt.select("\n\nPlease choose which list you would like to access: \n", array)
+            list_choice = prompt.select("\n\nPlease choose which" + " list".colorize(:color=>:light_blue) + " you would like to access: \n", array)
             system"clear"
             decide_to_RUD(list_choice)
             puts "\n\nIf you'd like to continue with grocery bot hit"+" enter-key".colorize(:color=>:red).bold + ". "+"Otherwise enter" +" exit".colorize(:color=>:red).bold
@@ -67,18 +72,19 @@ class Cli
             system "clear"
             list_creation
         else
+            system "clear"
+            puts "\n\n\n\n      🍆  🍉  🍄  🍕  🍤       Exiting Grocery-Bot! PS. Eat your veggies     🍤  🍕  🍄  🍉  🍆\n\n\n".colorize(:color=>:red).bold
             exit 
         end
         exit_or_not    
-        # binding.pry
     end
 
 
     # HELPER: Read, update, delete. Used in choose_list 'Lots of other *helper* methods used here!
     def decide_to_RUD current_list
-        puts "\n\nYou are working within list  "+"------->".colorize(:color=>:light_blue)+" #{current_list}\n\n".colorize(:color => :red).bold
+        puts "\n\nYou are working within list  ".colorize(:color=>:magenta)+"------->  ".colorize(:color => :light_blue) + "#{current_list}\n\n".colorize(:color => :red).underline
         prompt = TTY::Prompt.new
-        rud_choice = prompt.select("Would you like read, update, or delete within #{current_list}? \n", ["Read list", "Add item", "Delete item", "Exit"])
+        rud_choice = prompt.select("Choose whether you want to "+ "Create".colorize(:color => :light_blue) +", "+"Update".colorize(:color => :light_blue) + ", or" + " Delete an item ".colorize(:color => :light_blue) + "within #{current_list}? \n", ["Read list", "Add item", "Delete item", "Exit"])
         
         system "clear"
         puts "\n\nYou are working within list  "+"------->".colorize(:color=>:light_blue)+" #{current_list}".colorize(:color => :red).bold
@@ -90,6 +96,8 @@ class Cli
 
             delete_item(current_list)
         else 
+            system "clear"
+            puts "\n\n\n\n      Exiting Bot!\n\n\n".colorize(:color=>:red).bold
             exit
         end
     end
@@ -152,8 +160,9 @@ class Cli
     def add_items_to_new_list
         array = Item.all.map {|item| item.name}
         prompt = TTY::Prompt.new
-        choices = prompt.multi_select("Please choose from list of popular household-grocery items below: \n", array)
-        puts "\n\nItem's successfully added to list.".colorize(:color=>:light_red)
+        choices = prompt.multi_select("Please choose from the list of popular household-grocery items below: \n\n", array)
+        puts "\n\n      Item's successfully added to list.".colorize(:color=>:light_red)+"😌  😌  😌"
+        puts "\n                        🍴  🍛 "
         grocery_objects = get_item_object_from_choices (choices)
         grocery_objects.map {|choice| List_item.create(list: List.last, item: choice)}
     end
@@ -168,7 +177,7 @@ class Cli
         grocery_objects = get_item_object_from_choices (choices)
         list_id = find_chosen_list_id(list)
         grocery_objects.map {|item| List_item.where(list_id: list_id).where(item_id: item.id)}
-        puts "Items successfully deleted! Yehaw".coloriz(:color=>:light_red)
+        puts "\n\n          Items successfully deleted! Yehaw".coloriz(:color=>:light_red)
     end
 
 
