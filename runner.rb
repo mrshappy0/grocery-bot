@@ -5,13 +5,13 @@ puts "      What name would you like to be identified by?\n\n"
 
 user_name = gets.chomp
 
+
 user_new = User.new(user_name)
 
-# binding.pry
 cli = Cli.new(user_new)
 
+
 cli.welcome_menu
-# cli.welcome_menu
 
 
 0 

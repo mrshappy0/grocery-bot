@@ -16,10 +16,12 @@ class Cli
 
 
     # opening prompt that runs list creation. May change that! 
-    def welcome_menu
+    def welcome_menu(exit_or_not="")
         system "clear"
         puts "\n\nWelcome "+ "#{user.name}!\n\n".colorize(:color=>:light_magenta)
-        choose_list
+        while exit_or_not != "exit"
+            exit_or_not = choose_list
+        end
     end
 
     # list creation prompt! Check zach's code for refactoring
@@ -31,10 +33,14 @@ class Cli
             system "clear"
             puts "\n\nWhat is the name of the grocery list?"
             list_name = gets.chomp.downcase
-            puts "\n\nYou are working within new list  "+"------->".colorize(:color=>:light_blue)+" #{list_name}\n\n".colorize(:color => :red).bold
-            list1 = List.create(name: list_name)
-            add_items_to_new_list
-            decide_to_RUD(List.last.name)
+            if list_name != "exit"
+                puts "\n\nYou are working within new list  "+"------->".colorize(:color=>:light_blue)+" #{list_name}\n\n".colorize(:color => :red).bold
+                list1 = List.create(name: list_name)
+                add_items_to_new_list
+                decide_to_RUD(List.last.name)
+            elsif list_name == "exit"
+                exit
+            end
         elsif yes_no == "No"
             system "clear"
             puts "\n\nMy work is done here, Thank you!\n\n\n"
@@ -53,10 +59,14 @@ class Cli
             list_choice = prompt.select("\n\nPlease choose which list you would like to access: \n", array)
             system"clear"
             decide_to_RUD(list_choice)
+            puts "do you want to exit? Enter exit if you want to"
+            exit_or_not = gets.chomp.downcase
         elsif yes_no == "No"
             system "clear"
             list_creation
-        end    
+        end
+        exit_or_not    
+        # binding.pry
     end
 
 
